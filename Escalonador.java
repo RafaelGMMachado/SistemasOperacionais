@@ -29,7 +29,7 @@ public class Escalonador {
             Processo processo = processos.stream().filter(o -> o.PID == executandoPID).findFirst().get();
             int processoIndex = processos.indexOf(processo);
             
-            if (timeInProcess > 4 || 
+            if (timeInProcess > quantum || 
                 ((tempo == 0 || timeInProcess != 0) && processo.operacoesIO.contains(processo.instante))
             ){
                 executandoPID = processoIndex == quantProcessos ? processos.get(0).PID : processos.get(processoIndex + 1).PID;
@@ -40,7 +40,7 @@ public class Escalonador {
             if (processo.instante == processo.duracao){
                 processos.remove(processoIndex);
                 processosConcluidos.add(processo);
-                
+
                 executandoPID = processoIndex == quantProcessos ? processos.get(0).PID : processos.get(processoIndex + 1).PID;
                 timeInProcess = 0;
                 continue;
