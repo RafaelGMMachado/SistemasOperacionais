@@ -1,5 +1,3 @@
-import java.sql.Types;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,8 +27,9 @@ public class Escalonador {
             Processo processo = processos.stream().filter(o -> o.PID == executandoPID).findFirst().get();
             int processoIndex = processos.indexOf(processo);
             
-            if (timeInProcess > quantum || 
-                ((tempo == 0 || timeInProcess != 0) && processo.operacoesIO.contains(processo.instante))
+            if (timeInProcess >= quantum || 
+                ((tempo == 0 || timeInProcess != 0) && processo.operacoesIO.contains(processo.instante)) ||
+                tempo < processo.chegada
             ){
                 executandoPID = processoIndex == quantProcessos ? processos.get(0).PID : processos.get(processoIndex + 1).PID;
                 timeInProcess = 0;
@@ -38,10 +37,12 @@ public class Escalonador {
             }
 
             if (processo.instante == processo.duracao){
+                executandoPID = processoIndex == quantProcessos ? processos.get(0).PID : processos.get(processoIndex + 1).PID;
+                
                 processos.remove(processoIndex);
                 processosConcluidos.add(processo);
-
-                executandoPID = processoIndex == quantProcessos ? processos.get(0).PID : processos.get(processoIndex + 1).PID;
+                
+                quantProcessos --;
                 timeInProcess = 0;
                 continue;
             }
@@ -50,6 +51,7 @@ public class Escalonador {
             processo.instante ++;
             timeInProcess ++;
             tempo ++;
+            System.out.print(tempo + " | " + processo.PID + "\n");
         }
     }
 }
