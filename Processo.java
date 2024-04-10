@@ -28,15 +28,4 @@ public class Processo {
     public int getChegada(){
         return this.chegada;
     }
-    
-/* 
-    public String getTipo(){
-        return tipo;
-    }
-
-    @Override
-    public String toString() {
-        return "<" + tipo + ", " + lexema + ">";
-    }
-    */
 }
