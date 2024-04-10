@@ -7,6 +7,7 @@ public class Processo {
     int chegada;
     List<Integer> operacoesIO;
     int instante;
+    int tempoFinal;
 
     public Processo(String linha){
         List<Integer> operacoesIO = new ArrayList<>();

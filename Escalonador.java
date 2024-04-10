@@ -28,6 +28,7 @@ public class Escalonador {
 
     public void Executar() throws FileNotFoundException{
         PrintWriter outputFile = new PrintWriter("saida.txt");
+        PrintWriter graficoFile = new PrintWriter("grafico.txt");
 
         outputFile.print("********** TEMPO 0 **********\n");
 
@@ -58,6 +59,7 @@ public class Escalonador {
                 trocarProcesso(processoIndex);
                 
                 fila.remove(processoIndex);
+                processo.tempoFinal = tempo;
                 processosConcluidos.add(processo);
                 
                 continue;
@@ -65,6 +67,7 @@ public class Escalonador {
 
             outputFile.print("Fila: " + getProcecssosFilaText() + "\n");
             outputFile.print("CPU: " + executandoPID + "(" + String.valueOf(processo.duracao - processo.instante) + ")\n");
+            graficoFile.print(executandoPID + " | ");
             
             processo.instante ++;
             tempoProcessando ++;
@@ -76,6 +79,16 @@ public class Escalonador {
         outputFile.print("Fila: Nao ha processos na fila\n");
         outputFile.print("ACABARAM OS PROCESSOS!!!\n");
         outputFile.close();
+        
+        graficoFile.print("\n\n********** Tempo de espera **********\n");
+        int somaTempo = 0;
+        for (Processo processo : processosConcluidos){
+            int tempoEspera = processo.tempoFinal-processo.chegada;
+            somaTempo += tempoEspera;
+            graficoFile.print(processo.PID + ": " + tempoEspera + "\n");
+        }
+        graficoFile.print("Media: " + somaTempo/(processosConcluidos.size()-1));
+        graficoFile.close();
     }
 
     private void trocarProcesso(int processoIndex){
