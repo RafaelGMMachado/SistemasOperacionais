@@ -27,7 +27,7 @@ public class Escalonador {
     }
 
     public void Executar() throws FileNotFoundException{
-        PrintWriter outputFile = new PrintWriter("output.txt");
+        PrintWriter outputFile = new PrintWriter("saida.txt");
 
         outputFile.print("********** TEMPO 0 **********\n");
 
