@@ -7,23 +7,23 @@ import java.util.stream.Collectors;
 
 public class Escalonador {
     private int tempo;
-    private List<Processo> processos;
+    private List<Processo> processosEmEspera;
     private List<Processo> fila;
     private List<Processo> processosConcluidos;
     private int quantum;
-    private String executandoPID;
+    private Processo processoExecutando;
     private int tempoProcessando;
 
     public Escalonador(List<Processo> processos, int quantum){
         processos.sort(Comparator.comparing(Processo::getChegada));
         
+        this.quantum = quantum;
         this.tempo = 0;
-        this.processos = processos; 
+        this.tempoProcessando = 0;
+        this.processoExecutando = processos.remove(0);
+        this.processosEmEspera = processos;
         this.processosConcluidos = new ArrayList<>();
         this.fila = new ArrayList<>();
-        this.quantum = quantum;
-        this.executandoPID = processos.get(0).PID;
-        this.tempoProcessando = 0;
     }
 
     public void Executar() throws FileNotFoundException{
@@ -32,48 +32,44 @@ public class Escalonador {
 
         outputFile.print("********** TEMPO 0 **********\n");
 
-        while (!processos.isEmpty() || !fila.isEmpty()){
-            List<Processo> novoNaFila = processos.stream().filter(o -> o.chegada == tempo).collect(Collectors.toList());
+        while (!processosEmEspera.isEmpty() || !fila.isEmpty()){
+            List<Processo> novoNaFila = processosEmEspera.stream().filter(o -> o.chegada == tempo).collect(Collectors.toList());
             if (!novoNaFila.isEmpty()){
                 fila.addAll(novoNaFila);
-                processos.removeAll(novoNaFila);
+                processosEmEspera.removeAll(novoNaFila);
                 outputFile.print("#[evento] CHEGADA < " + getProcessosNovosText(novoNaFila) + ">\n");
             }
 
-            Processo processo = fila.stream().filter(o -> o.PID == executandoPID).findFirst().get();
-            int processoIndex = fila.indexOf(processo);
-            
             if (tempoProcessando >= quantum){
-                trocarProcesso(processoIndex);
+                trocarProcesso(false);
                 continue;
             }
 
-            if ((tempo == 0 || tempoProcessando != 0) && processo.operacoesIO.contains(processo.instante)){
-                outputFile.print("#[evento] OPERACAO I/O < " + executandoPID + " >\n");
-                trocarProcesso(processoIndex);
+            if ((tempo == 0 || tempoProcessando != 0) && processoExecutando.operacoesIO.contains(processoExecutando.instante)){
+                outputFile.print("#[evento] OPERACAO I/O < " + processoExecutando.PID + " >\n");
+                trocarProcesso(false);
                 continue;
             }
 
-            if (processo.instante == processo.duracao){
-                outputFile.print("#[evento] ENCERRANDO < " + executandoPID + " >\n");
-                trocarProcesso(processoIndex);
+            if (processoExecutando.instante == processoExecutando.duracao){
+                outputFile.print("#[evento] ENCERRANDO < " + processoExecutando.PID + " >\n");
                 
-                fila.remove(processoIndex);
-                processo.tempoFinal = tempo;
-                processosConcluidos.add(processo);
+                processoExecutando.tempoFinal = tempo;
+                processosConcluidos.add(processoExecutando);
                 
+                trocarProcesso(true);
                 continue;
             }
 
             outputFile.print("Fila: " + getProcecssosFilaText() + "\n");
-            outputFile.print("CPU: " + executandoPID + "(" + String.valueOf(processo.duracao - processo.instante) + ")\n");
-            graficoFile.print(executandoPID + " | ");
+            outputFile.print("CPU: " + processoExecutando.PID + "(" + String.valueOf(processoExecutando.duracao - processoExecutando.instante) + ")\n");
+            graficoFile.print(processoExecutando.PID + " | ");
             
-            processo.instante ++;
+            processoExecutando.instante ++;
             tempoProcessando ++;
             tempo ++;
             outputFile.print("********** TEMPO " + tempo + " **********\n");
-            System.out.print(tempo + " | " + executandoPID + "\n");
+            System.out.println(tempo + " " + processoExecutando.PID + "\n");
         }
 
         outputFile.print("Fila: Nao ha processos na fila\n");
@@ -91,14 +87,17 @@ public class Escalonador {
         graficoFile.close();
     }
 
-    private void trocarProcesso(int processoIndex){
-        executandoPID = processoIndex == fila.size() - 1 ? fila.get(0).PID : fila.get(processoIndex + 1).PID;
+    private void trocarProcesso(Boolean fim){
+        fila.remove(processoExecutando);
+        if (!fim) fila.add(processoExecutando);
+
+        processoExecutando = fila.size() >= 1 ? fila.get(0) : processoExecutando;
         tempoProcessando = 0;
     }
 
     private String getProcecssosFilaText(){
         String texto = "";
-        List<Processo> filaReal = fila.stream().filter(o -> o.PID != executandoPID).collect(Collectors.toList());
+        List<Processo> filaReal = fila.stream().filter(o -> o.PID != processoExecutando.PID).collect(Collectors.toList());
 
         if (filaReal.isEmpty())
             return "Nao ha processos na fila";
