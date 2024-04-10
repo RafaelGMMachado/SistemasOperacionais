@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Escalonador {
-    private int tempo;
-    private List<Processo> processosEmEspera;
-    private List<Processo> fila;
-    private List<Processo> processosConcluidos;
-    private int quantum;
-    private Processo processoExecutando;
-    private int tempoProcessando;
+    private int quantum; // Tempo máximo que um processo pode rodar no escalonador quando tem um outro na fila
+    private int tempo; // Tempo atual do escalonador
+    private int tempoProcessando; // Tempo gasto no processo desde que ele começou a ser executado
+    private Processo processoExecutando; // Processo que está sendo executado atualmente pelo escalonador
+    private List<Processo> processosEmEspera; // Lista dos processos que estão esperando para entrar no escalonador
+    private List<Processo> processosConcluidos; // Lista dos processos que o escalonador já concluiu
+    private List<Processo> fila; // Fila dos processos que estão rodando no escalonador
 
     public Escalonador(List<Processo> processos, int quantum){
-        processos.sort(Comparator.comparing(Processo::getChegada));
+        processos.sort(Comparator.comparing(Processo::getChegada)); // Ordena os processos por ordem de chegada
         
         this.quantum = quantum;
         this.tempo = 0;
         this.tempoProcessando = 0;
-        this.processoExecutando = processos.remove(0);
+        this.processoExecutando = processos.remove(0); // Remove o processo que chega primeiro (que deve estar no tempo 0) da lista de espera enquanto o coloca para ser executado
         this.processosEmEspera = processos;
         this.processosConcluidos = new ArrayList<>();
         this.fila = new ArrayList<>();
@@ -33,25 +33,20 @@ public class Escalonador {
         outputFile.print("********** TEMPO 0 **********\n");
 
         while (!processosEmEspera.isEmpty() || !fila.isEmpty()){
-            List<Processo> novoNaFila = processosEmEspera.stream().filter(o -> o.chegada == tempo).collect(Collectors.toList());
-            if (!novoNaFila.isEmpty()){
-                fila.addAll(novoNaFila);
-                processosEmEspera.removeAll(novoNaFila);
-                outputFile.print("#[evento] CHEGADA < " + getProcessosNovosText(novoNaFila) + ">\n");
-            }
+            verificarListaEspera(outputFile);
 
-            if (tempoProcessando >= quantum){
+            if (tempoProcessando >= quantum){ // Verifica se o tempo de execução chegou no limite do quantum
                 trocarProcesso(false);
                 continue;
             }
 
-            if ((tempo == 0 || tempoProcessando != 0) && processoExecutando.operacoesIO.contains(processoExecutando.instante)){
+            if ((tempo == 0 || tempoProcessando != 0) && processoExecutando.operacoesIO.contains(processoExecutando.instante)){ // Verifica se o processo está fazendo alguma operação de I/O
                 outputFile.print("#[evento] OPERACAO I/O < " + processoExecutando.PID + " >\n");
                 trocarProcesso(false);
                 continue;
             }
 
-            if (processoExecutando.instante == processoExecutando.duracao){
+            if (processoExecutando.instante == processoExecutando.duracao){ // Verifica se o processo chegou no final
                 outputFile.print("#[evento] ENCERRANDO < " + processoExecutando.PID + " >\n");
                 
                 processoExecutando.tempoFinal = tempo;
@@ -69,22 +64,18 @@ public class Escalonador {
             tempoProcessando ++;
             tempo ++;
             outputFile.print("********** TEMPO " + tempo + " **********\n");
-            System.out.println(tempo + " " + processoExecutando.PID + "\n");
         }
 
-        outputFile.print("Fila: Nao ha processos na fila\n");
-        outputFile.print("ACABARAM OS PROCESSOS!!!\n");
-        outputFile.close();
-        
-        graficoFile.print("\n\n********** Tempo de espera **********\n");
-        int somaTempo = 0;
-        for (Processo processo : processosConcluidos){
-            int tempoEspera = processo.tempoFinal-processo.chegada;
-            somaTempo += tempoEspera;
-            graficoFile.print(processo.PID + ": " + tempoEspera + "\n");
+        printFinalArquivos(outputFile, graficoFile);
+    }
+
+    private void verificarListaEspera(PrintWriter outputFile){ // Verifica se entrou algum processo novo para ser executado
+        List<Processo> novoNaFila = processosEmEspera.stream().filter(o -> o.chegada == tempo).collect(Collectors.toList());
+        if (!novoNaFila.isEmpty()){
+            fila.addAll(novoNaFila);
+            processosEmEspera.removeAll(novoNaFila);
+            outputFile.print("#[evento] CHEGADA < " + getProcessosNovosText(novoNaFila) + ">\n");
         }
-        graficoFile.print("Media: " + somaTempo/(processosConcluidos.size()-1));
-        graficoFile.close();
     }
 
     private void trocarProcesso(Boolean fim){
@@ -117,5 +108,21 @@ public class Escalonador {
         }
 
         return texto;   
+    }
+
+    private void printFinalArquivos(PrintWriter outputFile, PrintWriter graficoFile){
+        outputFile.print("Fila: Nao ha processos na fila\n");
+        outputFile.print("ACABARAM OS PROCESSOS!!!\n");
+        outputFile.close();
+        
+        graficoFile.print("\n\n********** Tempo de espera **********\n");
+        int somaTempo = 0;
+        for (Processo processo : processosConcluidos){
+            int tempoEspera = processo.tempoFinal-processo.chegada;
+            somaTempo += tempoEspera;
+            graficoFile.print(processo.PID + ": " + tempoEspera + "\n");
+        }
+        graficoFile.print("Media: " + somaTempo/(processosConcluidos.size()-1));
+        graficoFile.close();
     }
 }
