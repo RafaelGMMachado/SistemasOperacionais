@@ -28,4 +28,8 @@ public class Processo {
     public int getChegada(){
         return this.chegada;
     }
+
+    public int getDuracao(){
+        return this.duracao;
+    }
 }

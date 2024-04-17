@@ -1,0 +1,119 @@
+********** TEMPO 0 **********
+Fila: Nao ha processos na fila
+CPU: P3(5)
+********** TEMPO 1 **********
+#[evento] CHEGADA <P4>
+Fila: P4(7) 
+CPU: P3(4)
+********** TEMPO 2 **********
+#[evento] OPERACAO I/O <P3>
+Fila: P3(3) 
+CPU: P4(7)
+********** TEMPO 3 **********
+Fila: P3(3) 
+CPU: P4(6)
+********** TEMPO 4 **********
+#[evento] CHEGADA <P2>
+Fila: P3(3) P2(10) 
+CPU: P4(5)
+********** TEMPO 5 **********
+#[evento] OPERACAO I/O <P4>
+Fila: P2(10) P4(4) 
+CPU: P3(3)
+********** TEMPO 6 **********
+Fila: P2(10) P4(4) 
+CPU: P3(2)
+********** TEMPO 7 **********
+Fila: P2(10) P4(4) 
+CPU: P3(1)
+********** TEMPO 8 **********
+#[evento] ENCERRANDO <P3>
+Fila: P4(4) 
+CPU: P2(10)
+********** TEMPO 9 **********
+Fila: P4(4) 
+CPU: P2(9)
+********** TEMPO 10 **********
+#[evento] CHEGADA <P1>
+Fila: P4(4) P1(9) 
+CPU: P2(8)
+********** TEMPO 11 **********
+Fila: P4(4) P1(9) 
+CPU: P2(7)
+********** TEMPO 12 **********
+Fila: P1(9) P2(6) 
+CPU: P4(4)
+********** TEMPO 13 **********
+Fila: P1(9) P2(6) 
+CPU: P4(3)
+********** TEMPO 14 **********
+Fila: P1(9) P2(6) 
+CPU: P4(2)
+********** TEMPO 15 **********
+#[evento] OPERACAO I/O <P4>
+Fila: P2(6) P4(1) 
+CPU: P1(9)
+********** TEMPO 16 **********
+Fila: P2(6) P4(1) 
+CPU: P1(8)
+********** TEMPO 17 **********
+#[evento] CHEGADA <P5>
+#[evento] OPERACAO I/O <P1>
+Fila: P4(1) P5(2) P1(7) 
+CPU: P2(6)
+********** TEMPO 18 **********
+#[evento] OPERACAO I/O <P2>
+Fila: P5(2) P1(7) P2(5) 
+CPU: P4(1)
+********** TEMPO 19 **********
+#[evento] ENCERRANDO <P4>
+Fila: P1(7) P2(5) 
+CPU: P5(2)
+********** TEMPO 20 **********
+Fila: P1(7) P2(5) 
+CPU: P5(1)
+********** TEMPO 21 **********
+#[evento] ENCERRANDO <P5>
+Fila: P2(5) 
+CPU: P1(7)
+********** TEMPO 22 **********
+Fila: P2(5) 
+CPU: P1(6)
+********** TEMPO 23 **********
+#[evento] OPERACAO I/O <P1>
+Fila: P1(5) 
+CPU: P2(5)
+********** TEMPO 24 **********
+Fila: P1(5) 
+CPU: P2(4)
+********** TEMPO 25 **********
+Fila: P1(5) 
+CPU: P2(3)
+********** TEMPO 26 **********
+Fila: P1(5) 
+CPU: P2(2)
+********** TEMPO 27 **********
+Fila: P2(1) 
+CPU: P1(5)
+********** TEMPO 28 **********
+Fila: P2(1) 
+CPU: P1(4)
+********** TEMPO 29 **********
+#[evento] OPERACAO I/O <P1>
+Fila: P1(3) 
+CPU: P2(1)
+********** TEMPO 30 **********
+#[evento] ENCERRANDO <P2>
+Fila: Nao ha processos na fila
+CPU: P1(3)
+********** TEMPO 31 **********
+Fila: Nao ha processos na fila
+CPU: P1(2)
+********** TEMPO 32 **********
+#[evento] OPERACAO I/O <P1>
+Fila: Nao ha processos na fila
+CPU: P1(1)
+********** TEMPO 33 **********
+#[evento] ENCERRANDO <P1>
+Fila: Nao ha processos na fila
+ACABARAM OS PROCESSOS!!!
