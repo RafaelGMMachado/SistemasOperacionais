@@ -1,9 +1,0 @@
-P3 | P3 | P4 | P4 | P4 | P3 | P3 | P3 | P2 | P2 | P2 | P2 | P4 | P4 | P4 | P1 | P1 | P2 | P4 | P5 | P5 | P1 | P1 | P2 | P2 | P2 | P2 | P1 | P1 | P2 | P1 | P1 | P1 | 
-
-********** Tempo de espera **********
-P3: 8
-P4: 18
-P5: 4
-P2: 26
-P1: 23
-Media: 19
