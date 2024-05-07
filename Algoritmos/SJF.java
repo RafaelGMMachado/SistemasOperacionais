@@ -10,7 +10,7 @@ import Base.Processo;
 public class SJF extends Escalonador {
 
     public SJF(List<Processo> processos) throws FileNotFoundException {
-        super(processos, "output/saidaSJF.txt", "output/graficoSJF.txt");
+        super(processos, "output/SJFSaida.txt", "output/SJFGrafico.txt");
     }
     
     @Override

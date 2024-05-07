@@ -10,7 +10,7 @@ public class RoundRobin extends Escalonador {
     protected int quantum; // Tempo máximo que um processo pode rodar no escalonador quando tem um outro na fila
 
     public RoundRobin(List<Processo> processos, int quantum) throws FileNotFoundException {
-        super(processos, "output/saidaRoundRobin.txt", "output/graficoRoundRobin.txt");
+        super(processos, "output/roundRobinSaida.txt", "output/roundRobinGrafico.txt");
         this.quantum = quantum;
     }    
 

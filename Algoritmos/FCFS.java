@@ -9,7 +9,7 @@ import Base.Processo;
 public class FCFS extends Escalonador {
 
     public FCFS(List<Processo> processos) throws FileNotFoundException {
-        super(processos, "output/saidaFCFS.txt", "output/graficoFCFS.txt");
+        super(processos, "output/FCFSSaida.txt", "output/FCFSGrafico.txt");
     }
     
     @Override

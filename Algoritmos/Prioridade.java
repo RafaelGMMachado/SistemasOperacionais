@@ -12,7 +12,7 @@ import Base.Processo;
 public class Prioridade extends Escalonador {
 
     public Prioridade(List<Processo> processos) throws FileNotFoundException {
-        super(processos, "output/saidaPrioridade.txt", "output/graficoPrioridade.txt");
+        super(processos, "output/prioridadeSaida.txt", "output/prioridadeGrafico.txt");
         
         Random rand = new Random();
         processoExecutando.prioridade = rand.nextInt(10);
