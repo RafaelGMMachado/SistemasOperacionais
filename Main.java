@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Base.Escalonador;
+import Base.Processo;
+import Algoritmos.RoundRobin;
+import Algoritmos.FCFS;
+import Algoritmos.SJF;
+
 public class Main {
     public static void main(String[] args) throws IOException{
         List<Processo> processos = new ArrayList<>();
@@ -17,8 +23,15 @@ public class Main {
                 linha = reader.readLine();
             }
         }
+ 
+        List<Escalonador> escalonadores = new ArrayList<>();
+        escalonadores.add(new RoundRobin(processos, 4));
+        escalonadores.add(new FCFS(processos));
+        escalonadores.add(new SJF(processos));
 
-        Escalonador escalonador = new Escalonador(processos, 4);
-        escalonador.Executar();
+        for (Escalonador escalonador : escalonadores){
+            escalonador.Executar();
+        }
+
     }
 }
