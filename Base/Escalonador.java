@@ -56,7 +56,7 @@ public class Escalonador {
         tempoProcessando = 0;
     }
 
-    protected String getProcecssosFilaText(){
+    protected String getProcessosFila(){
         String texto = "";
         List<Processo> filaReal = fila.stream().filter(o -> o.PID != processoExecutando.PID).collect(Collectors.toList());
 
@@ -64,12 +64,24 @@ public class Escalonador {
             return "Nao ha processos na fila";
 
         for (Processo processo : filaReal){
-            texto += processo.PID + "(" + String.valueOf(processo.duracao - processo.instante) + ") ";
+            texto += processo.PID + getProcessoFilaText(processo);
         }
 
         return texto;
     }
 
+    
+    protected void atualizaArquivos(){
+        outputFile.print("Fila: " + getProcessosFila() + "\n");
+        outputFile.print("CPU: " + processoExecutando.PID + getProcessoExecutandoText() + "\n");
+        graficoFile.print(processoExecutando.PID + " | ");
+        
+        processoExecutando.instante ++;
+        tempoProcessando ++;
+        tempo ++;
+        outputFile.print("********** TEMPO " + tempo + " **********\n");
+    }
+    
     protected String getProcessosNovosText(List<Processo> novosProcessos){
         String texto = "";
 
@@ -80,15 +92,12 @@ public class Escalonador {
         return texto;   
     }
 
-    protected void atualizaArquivos(){
-        outputFile.print("Fila: " + getProcecssosFilaText() + "\n");
-        outputFile.print("CPU: " + processoExecutando.PID + "(" + String.valueOf(processoExecutando.duracao - processoExecutando.instante) + ")\n");
-        graficoFile.print(processoExecutando.PID + " | ");
-            
-        processoExecutando.instante ++;
-        tempoProcessando ++;
-        tempo ++;
-        outputFile.print("********** TEMPO " + tempo + " **********\n");
+    protected String getProcessoFilaText(Processo processo){
+        return "(" + String.valueOf(processo.duracao - processo.instante) + ") ";   
+    }
+
+    protected String getProcessoExecutandoText(){
+        return "(" + String.valueOf(processoExecutando.duracao - processoExecutando.instante) + ")";   
     }
 
     protected void printFinalArquivos(){

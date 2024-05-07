@@ -9,6 +9,7 @@ import Base.Processo;
 import Algoritmos.RoundRobin;
 import Algoritmos.FCFS;
 import Algoritmos.SJF;
+import Algoritmos.Prioridade;
 
 public class Main {
     public static void main(String[] args) throws IOException{
@@ -28,6 +29,7 @@ public class Main {
         escalonadores.add(new RoundRobin(processos, 4));
         escalonadores.add(new FCFS(processos));
         escalonadores.add(new SJF(processos));
+        escalonadores.add(new Prioridade(processos));
 
         for (Escalonador escalonador : escalonadores){
             escalonador.Executar();

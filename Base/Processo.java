@@ -9,6 +9,7 @@ public class Processo {
     public List<Integer> operacoesIO;
     public int instante;
     public int tempoFinal;
+    public int prioridade;
 
     public Processo(String linha){
         List<Integer> operacoesIO = new ArrayList<>();
@@ -27,13 +28,14 @@ public class Processo {
         this.operacoesIO = operacoesIO;
     }
 
-    public Processo(String PID, int duracao, int chegada, List<Integer> operacoesIO, int instante, int tempoFinal){
+    public Processo(String PID, int duracao, int chegada, List<Integer> operacoesIO, int instante, int tempoFinal, int prioridade){
         this.PID = PID;
         this.duracao = duracao;
         this.chegada = chegada;
         this.operacoesIO = operacoesIO;
         this.instante = instante;
         this.tempoFinal = tempoFinal;
+        this.prioridade = prioridade;
     }
 
     public Processo(Processo copiando){
@@ -42,7 +44,8 @@ public class Processo {
         copiando.getChegada(),
         copiando.getOperacoesIO(),
         copiando.getInstante(),
-        copiando.getTempoFinal());
+        copiando.getTempoFinal(),
+        copiando.getPrioridade());
     }
     
     public String getPID(){
@@ -67,6 +70,10 @@ public class Processo {
 
     public int getTempoFinal(){
         return this.tempoFinal;
+    }
+
+    public int getPrioridade(){
+        return this.prioridade;
     }
 
     public int getTempoRestante(){
